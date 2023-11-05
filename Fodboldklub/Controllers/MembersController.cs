@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Fodboldklub.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Fodboldklub.Controllers
 {
@@ -41,6 +42,12 @@ namespace Fodboldklub.Controllers
             return RedirectToAction("List");
         }
 
+        public IActionResult Edit(int id)
+        {
+			var memberToEdit = getMembersFromSession().FirstOrDefault(m => m.Id == id);
+			if (memberToEdit == null) { return NotFound(); }
+			return View(memberToEdit);
+        }
         public IActionResult Delete(int id)
         {
             var memberToDelete = getMembersFromSession().FirstOrDefault(m => m.Id == id);
