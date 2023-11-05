@@ -46,8 +46,16 @@ namespace Fodboldklub.Controllers
             return View(memberToDelete);
         }
         [HttpPost]
-        public IActionResult Delete(Member member)
+        public IActionResult DeleteConfirmed(int id)
         {
+            var members = getMembersFromSession();
+            var memberToDelete = members.FirstOrDefault(m => m.Id == id);
+            members.Remove(memberToDelete);
+            foreach(Member member in members)
+            {
+                Console.WriteLine(member.Id + " " + member.FirstName);
+            }
+            HttpContext.Session.SetString("Members", JsonSerializer.Serialize(members));
             return RedirectToAction("List");
         }
         private List<Member>? getMembersFromSession()
