@@ -26,15 +26,28 @@ namespace Fodboldklub.Controllers
 
                 Member newMember = new Member
                 {
+                    Id = members.Count + 1,
                     FirstName = inputMember.FirstName,
                     LastName = inputMember.LastName,
                     Address = inputMember.Address,
                     Phone = inputMember.Phone,
                     Email = inputMember.Email,
                 };
-                members.Add(newMember);               
+                members.Add(newMember);
                 HttpContext.Session.SetString("Members", JsonSerializer.Serialize(members));
-            }           
+            }
+            return RedirectToAction("List");
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var memberToDelete = getMembersFromSession().FirstOrDefault(m => m.Id == id);
+            if (memberToDelete == null) { return NotFound(); }
+            return View(memberToDelete);
+        }
+        [HttpPost]
+        public IActionResult Delete(Member member)
+        {
             return RedirectToAction("List");
         }
         private List<Member>? getMembersFromSession()
