@@ -15,7 +15,9 @@
 				@Html.DisplayNameFor(model => model.Members![0].FirstName)
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.Members![0].LastName)
+				<a asp-action="List" asp-route-sortOrder="@ViewData["LastNameSortParm"]">
+					@Html.DisplayNameFor(model => model.Members![0].LastName)
+				</a>
 			</th>
 			<th>
 				@Html.DisplayNameFor(model => model.Members![0].Address)

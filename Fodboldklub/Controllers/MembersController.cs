@@ -7,11 +7,21 @@ namespace Fodboldklub.Controllers
 {
     public class MembersController : Controller
     {
-        public IActionResult List()
+        public IActionResult List(string sortOrder)
         {
+            ViewData["LastNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "lastname_desc" : "";
             List<Member>? members = getMembersFromSession();
-            var membersViewModel = new MembersViewModel { Members = members };
-            return View(membersViewModel);
+            switch(sortOrder)
+            {
+                case "lastname_desc":
+					members = members.OrderByDescending(m => m.LastName).ToList();
+					break;
+                default:
+                    members = members.OrderBy(m => m.LastName).ToList();
+                    break;
+            }
+			var membersViewModel = new MembersViewModel { Members = members };
+			return View(membersViewModel);
         }
 
         public IActionResult Create()
