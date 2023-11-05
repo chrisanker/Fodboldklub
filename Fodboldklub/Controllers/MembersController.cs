@@ -8,12 +8,11 @@ namespace Fodboldklub.Controllers
     {
         public IActionResult List()
         {
-            var membersJson = HttpContext.Session.GetString("Members");
-            var members = membersJson != null ? JsonSerializer.Deserialize<List<Member>>(membersJson) : new List<Member>();
-
+            List<Member>? members = getMembersFromSession();
             var membersViewModel = new MembersViewModel { Members = members };
             return View(membersViewModel);
         }
+
         public IActionResult Create()
         {
             return View();
@@ -23,8 +22,7 @@ namespace Fodboldklub.Controllers
         {
             if (ModelState.IsValid)
             {
-                var membersJson = HttpContext.Session.GetString("Members");
-                var members = membersJson != null ? JsonSerializer.Deserialize<List<Member>>(membersJson) : new List<Member>();
+                var members = getMembersFromSession();
 
                 Member newMember = new Member
                 {
@@ -34,17 +32,17 @@ namespace Fodboldklub.Controllers
                     Phone = inputMember.Phone,
                     Email = inputMember.Email,
                 };
-                members.Add(newMember);
-                Console.WriteLine($"{newMember.FirstName} {newMember.LastName} added.");
-                foreach (Member member in members)
-                {
-                    Console.WriteLine($"{member.FirstName} {member.LastName}");
-                }
+                members.Add(newMember);               
                 HttpContext.Session.SetString("Members", JsonSerializer.Serialize(members));
             }           
             return RedirectToAction("List");
         }
-
+        private List<Member>? getMembersFromSession()
+        {
+            var membersJson = HttpContext.Session.GetString("Members");
+            var members = membersJson != null ? JsonSerializer.Deserialize<List<Member>>(membersJson) : new List<Member>();
+            return members;
+        }
     }
 }
 
