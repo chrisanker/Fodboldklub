@@ -23,10 +23,11 @@ namespace Fodboldklub.Controllers
             if (ModelState.IsValid)
             {
                 var members = getMembersFromSession();
-
+                int idCounter = HttpContext.Session.GetInt32("IdCounter") ?? 0;
+                idCounter++;
                 Member newMember = new Member
                 {
-                    Id = members.Count + 1,
+                    Id = idCounter,
                     FirstName = inputMember.FirstName,
                     LastName = inputMember.LastName,
                     Address = inputMember.Address,
@@ -34,6 +35,7 @@ namespace Fodboldklub.Controllers
                     Email = inputMember.Email,
                 };
                 members.Add(newMember);
+                HttpContext.Session.SetInt32("IdCounter", idCounter);
                 HttpContext.Session.SetString("Members", JsonSerializer.Serialize(members));
             }
             return RedirectToAction("List");
