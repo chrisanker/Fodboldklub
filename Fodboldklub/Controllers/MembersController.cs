@@ -49,6 +49,7 @@ namespace Fodboldklub.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             var members = getMembersFromSession();
+            Console.WriteLine("Member Id to delete: {0}", id);
             var memberToDelete = members.FirstOrDefault(m => m.Id == id);
             members.Remove(memberToDelete);
             foreach(Member member in members)
