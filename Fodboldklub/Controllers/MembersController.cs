@@ -48,6 +48,23 @@ namespace Fodboldklub.Controllers
 			if (memberToEdit == null) { return NotFound(); }
 			return View(memberToEdit);
         }
+
+        [HttpPost]
+        public IActionResult EditConfirmed(int id, [Bind("Id,FirstName,LastName,Address,Phone,Email")] Member member)
+        {
+            var members = getMembersFromSession();
+            var memberToEdit = members.FirstOrDefault(m => m.Id == id);
+            
+            memberToEdit.FirstName = member.FirstName;
+            memberToEdit.LastName = member.LastName;
+            memberToEdit.Address = member.Address;
+            memberToEdit.Phone = member.Phone;
+            memberToEdit.Email = member.Email;
+
+			HttpContext.Session.SetString("Members", JsonSerializer.Serialize(members));
+
+			return RedirectToAction("List");
+        }
         public IActionResult Delete(int id)
         {
             var memberToDelete = getMembersFromSession().FirstOrDefault(m => m.Id == id);
